@@ -3,17 +3,17 @@ package xyz.ariesfish.dao;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import xyz.ariesfish.domain.Account;
 
 import java.util.List;
 
+@Repository("accountDao")
 public class AccountDaoImpl implements IAccountDao {
 
+    @Autowired
     private QueryRunner runner;
-
-    public void setRunner(QueryRunner runner) {
-        this.runner = runner;
-    }
 
     public List<Account> findAllAccounts() {
         try {
@@ -25,7 +25,7 @@ public class AccountDaoImpl implements IAccountDao {
 
     public Account findAccountById(Integer accountId) {
         try {
-            return runner.query("select * from account where id=?", new BeanHandler<Account>(Account.class));
+            return runner.query("select * from account where id=?", new BeanHandler<Account>(Account.class), accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,18 +1,17 @@
 package xyz.ariesfish.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import xyz.ariesfish.dao.IAccountDao;
 import xyz.ariesfish.domain.Account;
 
 import java.util.List;
 
+@Service("accountService")
 public class AccountServiceImpl implements IAccountService {
 
+    @Autowired
     private IAccountDao accountDao;
-
-    // for IoC
-    public void setAccountDao(IAccountDao accountDao) {
-        this.accountDao = accountDao;
-    }
 
     public List<Account> findAllAccounts() {
         return accountDao.findAllAccounts();
