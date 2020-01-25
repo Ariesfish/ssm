@@ -9,6 +9,7 @@ public class AccountServiceImpl implements IAccountService {
 
     private IAccountDao accountDao;
 
+    // for IoC
     public void setAccountDao(IAccountDao accountDao) {
         this.accountDao = accountDao;
     }
