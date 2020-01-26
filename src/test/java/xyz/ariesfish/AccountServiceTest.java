@@ -3,8 +3,8 @@ package xyz.ariesfish;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import xyz.ariesfish.dao.IAccountDao;
 import xyz.ariesfish.domain.Account;
-import xyz.ariesfish.service.IAccountService;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ public class AccountServiceTest {
     @Test
     public void testFindAll() {
         ApplicationContext ac = new ClassPathXmlApplicationContext("bean.xml");
-        IAccountService as = ac.getBean("accountService", IAccountService.class);
-        List<Account> accounts = as.findAllAccounts();
+        IAccountDao dao = ac.getBean("accountDao", IAccountDao.class);
+        List<Account> accounts = dao.findAllAccounts();
         for (Account account : accounts) {
             System.out.println(account);
         }
@@ -24,8 +24,8 @@ public class AccountServiceTest {
     @Test
     public void testFindOne() {
         ApplicationContext ac = new ClassPathXmlApplicationContext("bean.xml");
-        IAccountService as = ac.getBean("accountService", IAccountService.class);
-        Account account = as.findAccountById(1);
+        IAccountDao dao = ac.getBean("accountDao", IAccountDao.class);
+        Account account = dao.findAccountById(1);
         System.out.println(account);
     }
 

@@ -4,28 +4,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="accountService" class="xyz.ariesfish.service.AccountServiceImpl">
-        <!-- inject DAO -->
-        <property name="accountDao" ref="accountDao"></property>
-    </bean>
-
     <bean id="accountDao" class="xyz.ariesfish.dao.AccountDaoImpl">
-        <!-- inject QueryRunner -->
-        <property name="runner" ref="runner"></property>
+        <property name="dataSource" ref="dataSource"></property>
     </bean>
 
-    <!-- not use singleton runner -->
-    <bean id="runner" class="org.apache.commons.dbutils.QueryRunner" scope="prototype">
-        <!-- no set method, using constructor injection -->
-        <constructor-arg name="ds" ref="dataSource"></constructor-arg>
-    </bean>
+    <!--
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>-->
 
     <!-- Configure Data Source -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <!-- inject infos for creating data source -->
-        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
-        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring"></property>
-        <property name="user" value="root"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/spring"></property>
+        <property name="username" value="root"></property>
         <property name="password" value="suzhou123"></property>
     </bean>
 </beans>
