@@ -10,6 +10,8 @@ public interface IAccountDao {
 
     Account findAccountById(Integer accountId);
 
+    Account findAccountByName(String accountName);
+
     void saveAccount(Account account);
 
     void updateAccount(Account account);

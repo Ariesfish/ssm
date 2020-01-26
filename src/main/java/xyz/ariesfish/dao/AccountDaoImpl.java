@@ -25,7 +25,23 @@ public class AccountDaoImpl implements IAccountDao {
 
     public Account findAccountById(Integer accountId) {
         try {
-            return runner.query("select * from account where id=?", new BeanHandler<Account>(Account.class));
+            return runner.query("select * from account where id=?", new BeanHandler<Account>(Account.class), accountId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Account findAccountByName(String accountName) {
+        try {
+            List<Account> accounts = runner.query("select * from account where name=?", new BeanListHandler<Account>(Account.class), accountName);
+
+            if (accounts == null || accounts.size() == 0) {
+                return null;
+            }
+            if (accounts.size() > 1) {
+                throw new RuntimeException("Not only one record, data has problem.");
+            }
+            return accounts.get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -33,4 +33,15 @@ public class AccountServiceImpl implements IAccountService {
     public void deleteAccount(Integer accountId) {
         accountDao.deleteAccount(accountId);
     }
+
+    public void transfer(String srcName, String destName, Float money) {
+        Account src = accountDao.findAccountByName(srcName);
+        Account dest = accountDao.findAccountByName(destName);
+
+        src.setMoney(src.getMoney() - money);
+        dest.setMoney(dest.getMoney() + money);
+
+        accountDao.updateAccount(src);
+        accountDao.updateAccount(dest);
+    }
 }
