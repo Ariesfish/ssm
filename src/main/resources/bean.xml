@@ -7,11 +7,15 @@
     <bean id="accountService" class="xyz.ariesfish.service.AccountServiceImpl">
         <!-- inject DAO -->
         <property name="accountDao" ref="accountDao"></property>
+        <!-- inject TransactionManager -->
+        <property name="txManager" ref="txManager"></property>
     </bean>
 
     <bean id="accountDao" class="xyz.ariesfish.dao.AccountDaoImpl">
         <!-- inject QueryRunner -->
         <property name="runner" ref="runner"></property>
+        <!-- inject ConnectionUtils -->
+        <property name="connectionUtils" ref="connectionUtils"></property>
     </bean>
 
     <!-- not use singleton runner -->
@@ -27,5 +31,16 @@
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring"></property>
         <property name="user" value="root"></property>
         <property name="password" value="suzhou123"></property>
+    </bean>
+
+    <!-- Configure ConnectionUtils -->
+    <bean id="connectionUtils" class="xyz.ariesfish.utils.ConnectionUtils">
+        <!-- inject data source -->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!-- Configure TransactionManager -->
+    <bean id="txManager" class="xyz.ariesfish.utils.TransactionManager">
+        <property name="connectionUtils" ref="connectionUtils"></property>
     </bean>
 </beans>
