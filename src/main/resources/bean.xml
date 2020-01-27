@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="proxyAccountService" factory-bean="beanFactory" factory-method="getAccountService"></bean>
-
-    <bean id="beanFactory" class="xyz.ariesfish.factory.BeanFactory">
-        <property name="accountService" ref="accountService"></property>
-        <property name="txManager" ref="txManager"></property>
-    </bean>
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="accountService" class="xyz.ariesfish.service.AccountServiceImpl">
         <!-- inject DAO -->
@@ -48,4 +44,15 @@
     <bean id="txManager" class="xyz.ariesfish.utils.TransactionManager">
         <property name="connectionUtils" ref="connectionUtils"></property>
     </bean>
+
+    <!-- Configure AOP -->
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* xyz.ariesfish.service.*.*(..))"/>
+        <aop:aspect id="txAdvice" ref="txManager">
+            <aop:before method="beginTransaction" pointcut-ref="pt"></aop:before>
+            <aop:after-returning method="commit" pointcut-ref="pt"></aop:after-returning>
+            <aop:after-throwing method="rollback" pointcut-ref="pt"></aop:after-throwing>
+            <aop:after method="release" pointcut-ref="pt"></aop:after>
+        </aop:aspect>
+    </aop:config>
 </beans>

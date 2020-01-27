@@ -15,12 +15,12 @@ import java.util.List;
 public class AccountServiceTest {
 
     @Autowired
-    private IAccountService proxyAccountService;
+    private IAccountService as;
 
     // use junit for testing
     @Test
     public void testFindAll() {
-        List<Account> accounts = proxyAccountService.findAllAccounts();
+        List<Account> accounts = as.findAllAccounts();
         for (Account account : accounts) {
             System.out.println(account);
         }
@@ -28,12 +28,12 @@ public class AccountServiceTest {
 
     @Test
     public void testFindOne() {
-        Account account = proxyAccountService.findAccountById(1);
+        Account account = as.findAccountById(1);
         System.out.println(account);
     }
 
     @Test
     public void testTransfer() {
-        proxyAccountService.transfer("a", "b", 100f);
+        as.transfer("a", "b", 100f);
     }
 }
