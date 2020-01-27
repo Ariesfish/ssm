@@ -4,11 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="proxyAccountService" factory-bean="beanFactory" factory-method="getAccountService"></bean>
+
+    <bean id="beanFactory" class="xyz.ariesfish.factory.BeanFactory">
+        <property name="accountService" ref="accountService"></property>
+        <property name="txManager" ref="txManager"></property>
+    </bean>
+
     <bean id="accountService" class="xyz.ariesfish.service.AccountServiceImpl">
         <!-- inject DAO -->
         <property name="accountDao" ref="accountDao"></property>
-        <!-- inject TransactionManager -->
-        <property name="txManager" ref="txManager"></property>
     </bean>
 
     <bean id="accountDao" class="xyz.ariesfish.dao.AccountDaoImpl">
