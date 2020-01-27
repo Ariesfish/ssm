@@ -2,22 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/aop
-        https://www.springframework.org/schema/aop/spring-aop.xsd">
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="accountService" class="xyz.ariesfish.service.AccountServiceImpl">
-        <!-- inject DAO -->
-        <property name="accountDao" ref="accountDao"></property>
-    </bean>
-
-    <bean id="accountDao" class="xyz.ariesfish.dao.AccountDaoImpl">
-        <!-- inject QueryRunner -->
-        <property name="runner" ref="runner"></property>
-        <!-- inject ConnectionUtils -->
-        <property name="connectionUtils" ref="connectionUtils"></property>
-    </bean>
+    <context:component-scan base-package="xyz.ariesfish"></context:component-scan>
 
     <!-- not use singleton runner -->
     <bean id="runner" class="org.apache.commons.dbutils.QueryRunner" scope="prototype">
@@ -34,25 +28,5 @@
         <property name="password" value="suzhou123"></property>
     </bean>
 
-    <!-- Configure ConnectionUtils -->
-    <bean id="connectionUtils" class="xyz.ariesfish.utils.ConnectionUtils">
-        <!-- inject data source -->
-        <property name="dataSource" ref="dataSource"></property>
-    </bean>
-
-    <!-- Configure TransactionManager -->
-    <bean id="txManager" class="xyz.ariesfish.utils.TransactionManager">
-        <property name="connectionUtils" ref="connectionUtils"></property>
-    </bean>
-
-    <!-- Configure AOP -->
-    <aop:config>
-        <aop:pointcut id="pt" expression="execution(* xyz.ariesfish.service.*.*(..))"/>
-        <aop:aspect id="txAdvice" ref="txManager">
-            <aop:before method="beginTransaction" pointcut-ref="pt"></aop:before>
-            <aop:after-returning method="commit" pointcut-ref="pt"></aop:after-returning>
-            <aop:after-throwing method="rollback" pointcut-ref="pt"></aop:after-throwing>
-            <aop:after method="release" pointcut-ref="pt"></aop:after>
-        </aop:aspect>
-    </aop:config>
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 </beans>

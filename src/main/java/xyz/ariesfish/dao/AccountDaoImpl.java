@@ -3,23 +3,21 @@ package xyz.ariesfish.dao;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import xyz.ariesfish.domain.Account;
 import xyz.ariesfish.utils.ConnectionUtils;
 
 import java.util.List;
 
+@Repository("accountDao")
 public class AccountDaoImpl implements IAccountDao {
 
+    @Autowired
     private QueryRunner runner;
+
+    @Autowired
     private ConnectionUtils connectionUtils;
-
-    public void setRunner(QueryRunner runner) {
-        this.runner = runner;
-    }
-
-    public void setConnectionUtils(ConnectionUtils connectionUtils) {
-        this.connectionUtils = connectionUtils;
-    }
 
     public List<Account> findAllAccounts() {
         try {

@@ -1,16 +1,18 @@
 package xyz.ariesfish.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 
+@Component("connectionUtils")
 public class ConnectionUtils {
 
     private ThreadLocal<Connection> tl = new ThreadLocal<Connection>();
 
+    @Autowired
     private DataSource dataSource;
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public Connection getThreadConnection() {
         try {
