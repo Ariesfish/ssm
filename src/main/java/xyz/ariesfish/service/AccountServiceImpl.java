@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ariesfish.dao.IAccountDao;
 import xyz.ariesfish.domain.Account;
-import xyz.ariesfish.utils.TransactionManager;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class AccountServiceImpl implements IAccountService {
         src.setMoney(src.getMoney() - money);
         dest.setMoney(dest.getMoney() + money);
         accountDao.updateAccount(src);
-        //int i = 1/0;
+        // int i = 1/0;
         accountDao.updateAccount(dest);
     }
 }

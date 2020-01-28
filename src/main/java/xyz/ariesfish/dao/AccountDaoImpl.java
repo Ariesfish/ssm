@@ -1,12 +1,10 @@
 package xyz.ariesfish.dao;
 
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import xyz.ariesfish.domain.Account;
-import xyz.ariesfish.utils.ConnectionUtils;
 
 import java.util.List;
 
@@ -14,14 +12,11 @@ import java.util.List;
 public class AccountDaoImpl implements IAccountDao {
 
     @Autowired
-    private QueryRunner runner;
-
-    @Autowired
-    private ConnectionUtils connectionUtils;
+    private JdbcTemplate jdbcTemplate;
 
     public List<Account> findAllAccounts() {
         try {
-            return runner.query(connectionUtils.getThreadConnection(),"select * from account", new BeanListHandler<Account>(Account.class));
+            return jdbcTemplate.query("select * from account", new BeanPropertyRowMapper<Account>(Account.class));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -29,7 +24,16 @@ public class AccountDaoImpl implements IAccountDao {
 
     public Account findAccountById(Integer accountId) {
         try {
-            return runner.query(connectionUtils.getThreadConnection(),"select * from account where id=?", new BeanHandler<Account>(Account.class), accountId);
+            List<Account> accounts = jdbcTemplate.query("select * from account where id = ?", new BeanPropertyRowMapper<Account>(Account.class), accountId);
+
+            if (accounts == null || accounts.size() == 0) {
+                return null;
+            }
+            if (accounts.size() > 1) {
+                throw new RuntimeException("Not only one record, data has problem.");
+            }
+
+            return accounts.get(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +41,7 @@ public class AccountDaoImpl implements IAccountDao {
 
     public Account findAccountByName(String accountName) {
         try {
-            List<Account> accounts = runner.query(connectionUtils.getThreadConnection(),"select * from account where name=?", new BeanListHandler<Account>(Account.class), accountName);
+            List<Account> accounts = jdbcTemplate.query("select * from account where name = ?", new BeanPropertyRowMapper<Account>(Account.class), accountName);
 
             if (accounts == null || accounts.size() == 0) {
                 return null;
@@ -53,7 +57,7 @@ public class AccountDaoImpl implements IAccountDao {
 
     public void saveAccount(Account account) {
         try {
-            runner.update(connectionUtils.getThreadConnection(),"insert into account(name, money)values(?,?)", account.getName(), account.getMoney());
+            jdbcTemplate.update("insert into account(name, money)values(?,?)", account.getName(), account.getMoney());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +65,7 @@ public class AccountDaoImpl implements IAccountDao {
 
     public void updateAccount(Account account) {
         try {
-            runner.update(connectionUtils.getThreadConnection(),"update account set name=?, money=? where id=?", account.getName(), account.getMoney(), account.getId());
+            jdbcTemplate.update("update account set name=?, money=? where id=?", account.getName(), account.getMoney(), account.getId());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -69,7 +73,7 @@ public class AccountDaoImpl implements IAccountDao {
 
     public void deleteAccount(Integer accountId) {
         try {
-            runner.update(connectionUtils.getThreadConnection(),"delete from account where id=?", accountId);
+            jdbcTemplate.update("delete from account where id=?", accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
